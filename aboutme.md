@@ -4,7 +4,6 @@ layout: page
 permalink: /about/
 ---
 
-# About Me
 
 Born and raised in **El Salvador**, I'm currently a **Purdue University student** with a strong passion for **mathematics, data science, and technology**. My focus is on developing models that explore the complexities of statistics and uncover the patterns hidden behind numbers. I thrive on solving complex problems and digging into their root causes, always seeking creative solutions.
 
