@@ -1,7 +1,7 @@
 ---
 title: CV
 layout: page
-permalink: /about/
+permalink: /cv/
 ---
 
 Currently working on this one!
