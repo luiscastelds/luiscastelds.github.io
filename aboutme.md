@@ -16,10 +16,10 @@ Outside of academics, my **creativity and problem-solving** are fueled by my hob
 ---
 
 ## Education
-Bachelors of Science Mathematics Purdue University 2021 - 2025
+Bachelors of Science - Mathematics - Purdue University 2021 - 2025
 
 
-Bachelors of Science Data Science Purdue University 2021 - 2025
+Bachelors of Science - Data Science - Purdue University 2021 - 2025
 
 
 ---
