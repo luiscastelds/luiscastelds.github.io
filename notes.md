@@ -1,10 +1,9 @@
 ---
-title:
+title: Courses
 layout: page
 permalink: /notes/
 ---
 
-## Courses
 - [CS 440](/notes/cs440/)
 - [CS 471](/notes/cs471/)
 - [CS 373](/notes/cs373/)
