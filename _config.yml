@@ -21,7 +21,7 @@ navigation:                     # accepts {file, title, url, icon, sidebaricon}
   - {file: "archive.html", title: "Home", sidebaricon: home}
   - {file: "README.md", title: "About me", sidebaricon: address-card}
   - {file: "README.md", title: "CV", sidebaricon: address-card}
-  - {file: "index.html", title: "My Notes", sidebaricon: address-card}
+   - {file: "notes.md", title: "Notes", sidebaricon: book}
 
 external:                       # accepts {file, title, url, icon, sidebaricon}
   - {title: Mail, icon: envelope, url: "mailto:luiscastelds@gmail.com"}
