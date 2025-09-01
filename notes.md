@@ -1,5 +1,5 @@
 ---
-title: Notes
+title:
 layout: page
 permalink: /notes/
 ---
