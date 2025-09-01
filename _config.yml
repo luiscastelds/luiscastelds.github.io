@@ -1,6 +1,6 @@
-title: "Blog Title"
-author: "Blog Author"
-description: "My blog"
+title: "Luis Castellanos"
+author: "Luis Castellanos"
+description: "My Personal Website"
 permalink: /:title/
 lang: "en"
 excerpt_separator: "\n\n\n"
