@@ -19,7 +19,7 @@ show_minimal: false             # remove all clutter
 
 navigation:                     # accepts {file, title, url, icon, sidebaricon}
   - {file: "index.html", title: "Home"}
-  - {file: "aboutme.md", title: "Aboout me"}
+  - {file: "aboutme.md", title: "About me"}
   - {file: "cv.md", title: "CV"}
   - {file: "notes.md", title: "My Notes"}
   - {file: "research.md", title: "My Research"}
