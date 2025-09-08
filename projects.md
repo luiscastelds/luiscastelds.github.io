@@ -31,6 +31,7 @@ permalink: /projects/
 **Stack:** Jekyll, GitHub Pages  
 **What I did:**
 - Well you are looking at it!
+
 **Comments:**
 - This was an easy project to do and maintain.
 - Originally wanted a website to host my academic coursework because I wanted easy access to my notes.
