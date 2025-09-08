@@ -1,0 +1,445 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Pong</title>
+    <style>
+      body { margin: 0; background: #0b1020; color: #fff; font-family: system-ui, sans-serif; }
+      .wrap { max-width: 960px; margin: 24px auto; padding: 12px; }
+    </style>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body>
+    <div class="wrap">
+      <div id="root"></div>
+    </div>
+
+    <!-- Paste the component code from the canvas between these script tags -->
+    <script type="text/babel">
+      import React, { useEffect, useMemo, useRef, useState } from "react";
+
+// A single-file, drop-in Pong you can paste into any React app.
+// Controls: W/S or ↑/↓. Space = pause/resume. R = restart.
+// Mobile: Tap and hold left/right half of the canvas: top = up, bottom = down.
+
+        export default function Pong() {
+          // World constants
+          const BASE_W = 900; // internal render width (px)
+          const BASE_H = 540; // internal render height (px) → 5:3 aspect fits laptop screens
+          const PADDLE_W = 14;
+          const PADDLE_H = 100;
+          const BALL_R = 9;
+          const WIN_SCORE = 11;
+        
+          // UI state
+          const [running, setRunning] = useState(false);
+          const [paused, setPaused] = useState(false);
+          const [playerScore, setPlayerScore] = useState(0);
+          const [aiScore, setAiScore] = useState(0);
+          const [difficulty, setDifficulty] = useState(0.55); // 0.3=easy, 1.0=hard (slower default) // 0.3=easy, 1.0=hard
+          const [ballSpeed, setBallSpeed] = useState(4); // slower initial ball speed // initial ball speed scalar
+          const [mode, setMode] = useState("1P"); // 1P vs AI or 2P local
+        
+          // Refs for imperative stuff
+          const canvasRef = useRef(null);
+          const rafRef = useRef(0);
+          const keysRef = useRef({ up: false, down: false, up2: false, down2: false });
+          const touchesRef = useRef({ leftUp: false, leftDown: false, rightUp: false, rightDown: false });
+          const dprRef = useRef(1);
+        
+          // Game objects refs
+          const stateRef = useRef({
+            ball: { x: BASE_W / 2, y: BASE_H / 2, vx: 0, vy: 0, speed: ballSpeed },
+            p1: { x: 24, y: BASE_H / 2 - PADDLE_H / 2, vy: 0 },
+            p2: { x: BASE_W - 24 - PADDLE_W, y: BASE_H / 2 - PADDLE_H / 2, vy: 0 },
+            lastTime: 0,
+            aiTargetY: BASE_H / 2,
+            rally: 0,
+            freezedUntil: 0,
+          });
+        
+          // Helpers
+          const resetBall = (toward = 1) => {
+            const angleDeg = 15 + Math.random() * 30; // between 15° and 45° (gentler angles) // between 20° and 70°
+            const angle = (angleDeg * Math.PI) / 180;
+            const sp = Math.max(3, ballSpeed); // allow slower starts // ensure minimum
+            stateRef.current.ball.x = BASE_W / 2;
+            stateRef.current.ball.y = BASE_H / 2;
+            stateRef.current.ball.speed = sp;
+            stateRef.current.ball.vx = Math.cos(angle) * sp * toward;
+            stateRef.current.ball.vy = (Math.random() < 0.5 ? -1 : 1) * Math.sin(angle) * sp;
+            stateRef.current.rally = 0;
+          };
+        
+          const centerEverything = () => {
+            stateRef.current.p1.y = BASE_H / 2 - PADDLE_H / 2;
+            stateRef.current.p2.y = BASE_H / 2 - PADDLE_H / 2;
+            resetBall(Math.random() < 0.5 ? 1 : -1);
+          };
+        
+          // Input handlers
+          useEffect(() => {
+            const onKey = (e) => {
+              if (e.repeat) return;
+              const down = e.type === "keydown";
+              if (e.code === "ArrowUp") keysRef.current.up = down;
+              if (e.code === "ArrowDown") keysRef.current.down = down;
+              if (e.code === "KeyW") keysRef.current.up2 = down;
+              if (e.code === "KeyS") keysRef.current.down2 = down;
+              if (down && e.code === "Space") setPaused((p) => !p);
+              if (down && e.code === "KeyR") restart();
+            };
+            window.addEventListener("keydown", onKey);
+            window.addEventListener("keyup", onKey);
+            return () => {
+              window.removeEventListener("keydown", onKey);
+              window.removeEventListener("keyup", onKey);
+            };
+          }, []);
+        
+          // Touch controls (top/bottom halves on each side)
+          useEffect(() => {
+            const el = canvasRef.current;
+            if (!el) return;
+            const setTouch = (clientX, clientY, isDown) => {
+              const rect = el.getBoundingClientRect();
+              const x = clientX - rect.left;
+              const y = clientY - rect.top;
+              const left = x < rect.width / 2;
+              const top = y < rect.height / 2;
+              if (left) {
+                touchesRef.current.leftUp = isDown && top;
+                touchesRef.current.leftDown = isDown && !top;
+              } else {
+                touchesRef.current.rightUp = isDown && top;
+                touchesRef.current.rightDown = isDown && !top;
+              }
+            };
+            const onStart = (e) => {
+              for (const t of e.changedTouches) setTouch(t.clientX, t.clientY, true);
+              e.preventDefault();
+            };
+            const onMove = (e) => {
+              for (const t of e.changedTouches) setTouch(t.clientX, t.clientY, true);
+              e.preventDefault();
+            };
+            const onEnd = (e) => {
+              touchesRef.current = { leftUp: false, leftDown: false, rightUp: false, rightDown: false };
+              e.preventDefault();
+            };
+            el.addEventListener("touchstart", onStart, { passive: false });
+            el.addEventListener("touchmove", onMove, { passive: false });
+            el.addEventListener("touchend", onEnd, { passive: false });
+            el.addEventListener("touchcancel", onEnd, { passive: false });
+            return () => {
+              el.removeEventListener("touchstart", onStart);
+              el.removeEventListener("touchmove", onMove);
+              el.removeEventListener("touchend", onEnd);
+              el.removeEventListener("touchcancel", onEnd);
+            };
+          }, []);
+        
+          // Resize canvas to DPR
+          useEffect(() => {
+            const canvas = canvasRef.current;
+            if (!canvas) return;
+            const ctx = canvas.getContext("2d");
+            const resize = () => {
+              const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+              dprRef.current = dpr;
+              canvas.width = Math.floor(BASE_W * dpr);
+              canvas.height = Math.floor(BASE_H * dpr);
+              canvas.style.width = "100%"; // responsive width
+              canvas.style.maxWidth = "900px";
+              canvas.style.height = `${(BASE_H / BASE_W) * 100}%`;
+              ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+              drawStatic(ctx);
+            };
+            resize();
+            const ro = new ResizeObserver(resize);
+            ro.observe(canvas);
+            return () => ro.disconnect();
+          }, []);
+        
+          // Draw helpers
+          const drawStatic = (ctx) => {
+            ctx.clearRect(0, 0, BASE_W, BASE_H);
+            // background
+            ctx.fillStyle = "#0b1020"; // deep space blue
+            ctx.fillRect(0, 0, BASE_W, BASE_H);
+            // center net
+            ctx.strokeStyle = "rgba(255,255,255,0.35)";
+            ctx.lineWidth = 4;
+            ctx.setLineDash([14, 14]);
+            ctx.beginPath();
+            ctx.moveTo(BASE_W / 2, 0);
+            ctx.lineTo(BASE_W / 2, BASE_H);
+            ctx.stroke();
+            ctx.setLineDash([]);
+          };
+        
+          const draw = (ctx) => {
+            drawStatic(ctx);
+            const { p1, p2, ball } = stateRef.current;
+            // paddles
+            ctx.fillStyle = "white";
+            ctx.fillRect(p1.x, p1.y, PADDLE_W, PADDLE_H);
+            ctx.fillRect(p2.x, p2.y, PADDLE_W, PADDLE_H);
+            // ball
+            ctx.beginPath();
+            ctx.arc(ball.x, ball.y, BALL_R, 0, Math.PI * 2);
+            ctx.fill();
+            // scores
+            ctx.font = "48px ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', monospace";
+            ctx.textAlign = "center";
+            ctx.fillText(String(playerScore), BASE_W * 0.25, 70);
+            ctx.fillText(String(aiScore), BASE_W * 0.75, 70);
+          };
+        
+          // Physics & loop
+          useEffect(() => {
+            const canvas = canvasRef.current;
+            if (!canvas) return;
+            const ctx = canvas.getContext("2d");
+        
+            const step = (t) => {
+              if (!running || paused) {
+                draw(ctx);
+                rafRef.current = requestAnimationFrame(step);
+                return;
+              }
+        
+              const s = stateRef.current;
+              const dt = s.lastTime ? Math.min(32, t - s.lastTime) : 16;
+              s.lastTime = t;
+        
+              // Controls → velocity
+              const p1Speed = 6; // slower paddle
+              const p2Speed = 6 * difficulty; // slower AI/P2 paddle // AI (or P2) speed affected by difficulty
+              const wantUpP1 = keysRef.current.up || keysRef.current.up2 || touchesRef.current.leftUp;
+              const wantDownP1 = keysRef.current.down || keysRef.current.down2 || touchesRef.current.leftDown;
+        
+              if (mode === "2P") {
+                const wantUpP2 = touchesRef.current.rightUp; // mobile
+                const wantDownP2 = touchesRef.current.rightDown;
+                s.p2.vy = (wantUpP2 ? -p2Speed : 0) + (wantDownP2 ? p2Speed : 0) + (keysRef.current.up ? -p2Speed : 0) + (keysRef.current.down ? p2Speed : 0);
+              } else {
+                // Simple but fair AI – predicts ball Y with reaction lag
+                const reaction = 200 - difficulty * 120; // slower AI reactions // ms
+                if (t > s.freezedUntil) {
+                  if (t - s.lastAIDecideTime > reaction || s.lastAIDecideTime === undefined) {
+                    s.aiTargetY = s.ball.y - PADDLE_H / 2 + (Math.random() - 0.5) * (110 - difficulty * 80);
+                    s.lastAIDecideTime = t;
+                  }
+                  const dy = s.aiTargetY - s.p2.y;
+                  s.p2.vy = Math.max(-p2Speed, Math.min(p2Speed, dy * 0.12));
+                }
+              }
+        
+              s.p1.vy = (wantUpP1 ? -p1Speed : 0) + (wantDownP1 ? p1Speed : 0);
+        
+              // integrate paddles
+              s.p1.y = Math.max(0, Math.min(BASE_H - PADDLE_H, s.p1.y + s.p1.vy));
+              s.p2.y = Math.max(0, Math.min(BASE_H - PADDLE_H, s.p2.y + s.p2.vy));
+        
+              // integrate ball
+              if (t >= s.freezedUntil) {
+                s.ball.x += s.ball.vx;
+                s.ball.y += s.ball.vy;
+              }
+        
+              // wall bounce
+              if (s.ball.y - BALL_R <= 0 && s.ball.vy < 0) {
+                s.ball.vy *= -1;
+                s.ball.y = BALL_R + 0.01;
+              }
+              if (s.ball.y + BALL_R >= BASE_H && s.ball.vy > 0) {
+                s.ball.vy *= -1;
+                s.ball.y = BASE_H - BALL_R - 0.01;
+              }
+        
+              // paddle collisions
+              const collidePaddle = (px, py) => {
+                const withinY = s.ball.y + BALL_R >= py && s.ball.y - BALL_R <= py + PADDLE_H;
+                const withinXLeft = s.ball.x - BALL_R <= px + PADDLE_W && s.ball.x > px;
+                const withinXRight = s.ball.x + BALL_R >= px && s.ball.x < px + PADDLE_W;
+                return withinY && (withinXLeft || withinXRight);
+              };
+        
+              if (collidePaddle(s.p1.x, s.p1.y) && s.ball.vx < 0) {
+                const rel = (s.ball.y - (s.p1.y + PADDLE_H / 2)) / (PADDLE_H / 2); // -1..1
+                const angle = rel * (Math.PI / 3); // up to 60°
+                const sp = Math.min(12, Math.hypot(s.ball.vx, s.ball.vy) * 1.02 + 0.05); // gentler acceleration & lower cap
+                s.ball.vx = Math.cos(angle) * sp;
+                s.ball.vy = Math.sin(angle) * sp;
+                s.ball.x = s.p1.x + PADDLE_W + BALL_R + 0.1;
+                s.rally++;
+              }
+              if (collidePaddle(s.p2.x, s.p2.y) && s.ball.vx > 0) {
+                const rel = (s.ball.y - (s.p2.y + PADDLE_H / 2)) / (PADDLE_H / 2);
+                const angle = Math.PI - rel * (Math.PI / 3);
+                const sp = Math.min(12, Math.hypot(s.ball.vx, s.ball.vy) * 1.02 + 0.05); // gentler acceleration & lower cap
+                s.ball.vx = Math.cos(angle) * sp;
+                s.ball.vy = Math.sin(angle) * sp;
+                s.ball.x = s.p2.x - BALL_R - 0.1;
+                s.rally++;
+              }
+        
+              // scoring
+              if (s.ball.x < -BALL_R) {
+                setAiScore((sc) => sc + 1);
+                centerEverything();
+                s.freezedUntil = t + 900; // longer freeze before serve
+              } else if (s.ball.x > BASE_W + BALL_R) {
+                setPlayerScore((sc) => sc + 1);
+                centerEverything();
+                s.freezedUntil = t + 900; // longer freeze before serve
+              }
+        
+              draw(ctx);
+              rafRef.current = requestAnimationFrame(step);
+            };
+        
+            rafRef.current = requestAnimationFrame(step);
+            return () => cancelAnimationFrame(rafRef.current);
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+          }, [running, paused, difficulty, ballSpeed, mode, playerScore, aiScore]);
+        
+          // Restart game
+          const restart = () => {
+            setPlayerScore(0);
+            setAiScore(0);
+            setPaused(false);
+            centerEverything();
+          };
+        
+          // Start ball when running toggles from false → true
+          useEffect(() => {
+            if (running) centerEverything();
+            // eslint-disable-next-line react-hooks/exhaustive-deps
+          }, [running]);
+        
+          // Update initial speed when user changes slider
+          useEffect(() => {
+            stateRef.current.ball.speed = ballSpeed;
+          }, [ballSpeed]);
+        
+          // Winner detection
+          const winner = useMemo(() => {
+            if (playerScore >= WIN_SCORE) return "You win!";
+            if (aiScore >= WIN_SCORE) return mode === "2P" ? "Right player wins!" : "AI wins!";
+            return "";
+          }, [playerScore, aiScore, mode]);
+        
+          // UI
+          return (
+            <div className="w-full flex flex-col items-center gap-4 p-4">
+              <h1 className="text-2xl font-bold tracking-tight">Pong</h1>
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                <button
+                  onClick={() => setRunning((r) => !r)}
+                  className="px-4 py-2 rounded-2xl shadow text-sm bg-white/10 hover:bg-white/20 border border-white/20"
+                >
+                  {running ? "Stop" : "Start"}
+                </button>
+                <button
+                  onClick={() => setPaused((p) => !p)}
+                  disabled={!running}
+                  className="px-4 py-2 rounded-2xl shadow text-sm bg-white/10 hover:bg-white/20 border border-white/20 disabled:opacity-40"
+                >
+                  {paused ? "Resume" : "Pause"}
+                </button>
+                <button
+                  onClick={restart}
+                  className="px-4 py-2 rounded-2xl shadow text-sm bg-white/10 hover:bg-white/20 border border-white/20"
+                >
+                  Restart
+                </button>
+                <div className="flex items-center gap-2 text-sm">
+                  <label className="opacity-80">Mode</label>
+                  <select
+                    value={mode}
+                    onChange={(e) => setMode(e.target.value)}
+                    className="rounded-xl bg-white/10 px-3 py-1 border border-white/20"
+                  >
+                    <option value="1P">1 Player (vs AI)</option>
+                    <option value="2P">2 Player (local)</option>
+                  </select>
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <label className="opacity-80">Difficulty</label>
+                  <input
+                    type="range"
+                    min={0.3}
+                    max={1}
+                    step={0.05}
+                    value={difficulty}
+                    onChange={(e) => setDifficulty(parseFloat(e.target.value))}
+                  />
+                </div>
+                <div className="flex items-center gap-2 text-sm">
+                  <label className="opacity-80">Ball speed</label>
+                  <input
+                    type="range"
+                    min={3}
+                    max={9}
+                    step={0.5}
+                    value={ballSpeed}
+                    onChange={(e) => setBallSpeed(parseFloat(e.target.value))}
+                  />
+                    step={0.5}
+                    value={ballSpeed}
+                    onChange={(e) => setBallSpeed(parseFloat(e.target.value))}
+                  />
+                </div>
+              </div>
+        
+              <div className="relative w-full max-w-[900px] aspect-[5/3] rounded-2xl overflow-hidden shadow-xl border border-white/15 bg-[radial-gradient(75%_100%_at_50%_0%,rgba(120,120,255,0.15),rgba(0,0,0,0.6))]">
+                <canvas ref={canvasRef} className="w-full h-full select-none touch-none" />
+        
+                {/* Overlay UI */}
+                {!running && !winner && (
+                  <div className="absolute inset-0 flex flex-col items-center justify-center text-center p-6 bg-black/40 backdrop-blur-sm">
+                    <p className="text-lg mb-2">Press <kbd className="px-2 py-1 rounded bg-white/20">Start</kbd> to play</p>
+                    <p className="text-sm opacity-80">Controls: <b>W/S</b> or <b>↑/↓</b> · <b>Space</b> pause · <b>R</b> restart</p>
+                    <p className="text-sm opacity-80">Mobile: hold top/bottom of left half to move</p>
+                  </div>
+                )}
+                {paused && running && !winner && (
+                  <div className="absolute inset-0 grid place-items-center bg-black/40 backdrop-blur-sm">
+                    <div className="text-center">
+                      <div className="text-2xl font-semibold mb-2">Paused</div>
+                      <div className="opacity-80 text-sm">Press Space or click Resume</div>
+                    </div>
+                  </div>
+                )}
+                {!!winner && (
+                  <div className="absolute inset-0 grid place-items-center bg-black/40 backdrop-blur-sm">
+                    <div className="text-center">
+                      <div className="text-2xl font-semibold mb-2">{winner}</div>
+                      <button onClick={restart} className="px-4 py-2 rounded-2xl shadow text-sm bg-white/10 hover:bg-white/20 border border-white/20">
+                        Play again
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+        
+              <div className="text-xs opacity-70 text-center leading-relaxed">
+                Pro tip: Increase difficulty for a snappier AI. Try first to {WIN_SCORE} points.
+              </div>
+            </div>
+          );
+        }
+
+    </script>
+
+    <script type="text/babel">
+      const root = ReactDOM.createRoot(document.getElementById('root'));
+      root.render(<Pong />);
+    </script>
+  </body>
+</html>
