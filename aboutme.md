@@ -24,7 +24,7 @@ Bachelor of Science - Data Science - Purdue University Aug. 2021 - Dec. 2025
 
 ---
 
-##Q&A (I interviewed myself?)
+## Q&A (I interviewed myself?)
 
 **Q: Favorite programming language?**  
 A: Python — flexible, intuitive, and powerful for data science.
