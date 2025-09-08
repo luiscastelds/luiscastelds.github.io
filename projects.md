@@ -32,5 +32,9 @@ Below are the projects from my CV, with short, practical summaries of what I did
 ## Personal Website
 **Stack:** Jekyll, GitHub Pages  
 **What I did:**
-- Built and maintain my academic site hosting my CV and course notes.
-- Structured and styled pages for readability and a responsive layout.
+- Well you are looking at it!
+**Comments:**
+-This was an easy project to do and maintain.
+-Originally wanted a website to host my academic coursework because I wanted easy access to my notes.
+-Decided it would be best to create my personal website with a 'MyNotes' section.
+-Check regularly, I will add tons of cool stuff with time!
