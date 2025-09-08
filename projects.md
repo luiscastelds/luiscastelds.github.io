@@ -22,7 +22,7 @@ permalink: /projects/
 **Stack:** Linux, CasaOS, Networking  
 **What I did:**
 - Built a personal homelab on Ubuntu Server to self-host files and media.
-- Deployed CasaOS apps ( Plex, game servers, monitoring dashboards, ollama).
+- Deployed [CasaOS](https://casaos.zimaspace.com/) apps ( Plex, game servers, monitoring dashboards, ollama).
 - Set up secure remote access via Tailscale (SSH), and organized basic network/service monitoring.
 
 **Comments:**
@@ -45,7 +45,7 @@ permalink: /projects/
 - The project was so complex because Carcassonne is a terrible game to analyze with markov chains.
 - We still picked Carcassonne because we are huge fans of the game.
 - We had to break down the game so much it no longer was carcassonne.
-- Here you can see the presentation we gave, [Presentation]({% link /assets/files/carcassonneProject.pdf %})
+- Here you can check out our results, [presentation]({% link /assets/files/carcassonneProject.pdf %}).
 
 ---
 
