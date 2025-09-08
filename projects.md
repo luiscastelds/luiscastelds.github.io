@@ -6,7 +6,15 @@ permalink: /projects/
 
 ## Java Marketplace Program
 **Stack:** Java, OOP, Swing, Serializable  
-**What I did:** Group project where I developed most (if not all) of the backend for a marketplace application—object models, data flow, and core logic.
+**What I did:** 
+- Group project where I developed most (if not all) of the backend for a marketplace application—object models.
+- Added all of the methods to buy, sort, sell items, etc, etc
+
+**Comments:**
+- This was a final project for a class
+- I always felt that writing to a file is dull, decided to go with serializable.
+- Using serializable was fun but added a bigger challenge for my lack of experience.
+- That's why you can see the weird looking for loops in the [repository](https://github.com/titerms/final-project-5) (was on my old github account, titerms)
 
 ---
 
@@ -28,8 +36,16 @@ permalink: /projects/
 ## Carcassonne Markov Chain Model
 **Stack:** Python, NumPy, Stochastic Processes  
 **What I did:**
-- Modeled board-game tile draws with discrete-time Markov chains.
-- Designed the state space and transition matrices; analyzed long-run behavior and strategy implications.
+- Analyzed [Carcassonne](https://en.wikipedia.org/wiki/Carcassonne_(board_game)) with a markov chain.
+- Broke down the game to find a possible strategy or something.
+
+**Comments:**
+- Final Project for Stochastic Processes class (MA432)
+- Probably the most complex project I've been a part of.
+- The project was so complex because Carcassonne is a terrible game to analyze with markov chains.
+- We still picked Carcassonne because we are huge fans of the game.
+- We had to break down the game so much it no longer was carcassonne.
+- Here you can see the presentation we gave, [Presentation]({% link /assets/files/carcassonneProject.pdf %})
 
 ---
 
