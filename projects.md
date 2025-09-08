@@ -19,7 +19,7 @@ permalink: /projects/
 
 **Comments:**
 - Scraping computer parts to build a homelab server is really fun.
-- Learned that there are a tons of amazing apps easy to setup in CasaOS.
+- Learned that there are tons of amazing apps easy to setup in CasaOS.
 - I wanted to build a home media server because we have tons of movies laying around and I don't want to pay for cloud.
 - The project died very early because I need to learn how to portforward properly otherwise it felt like a major security flaw!
 ---
