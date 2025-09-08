@@ -22,7 +22,7 @@ navigation:                     # accepts {file, title, url, icon, sidebaricon}
   - {file: "aboutme.md", title: "About me"}
   - {file: "cv.md", title: "CV"}
   - {file: "notes.md", title: "My Notes"}
-  - {file: "research.md", title: "My Research"}
+  - {file: "projects.md", title: "My Projects"}
 
 external:                       # accepts {file, title, url, icon, sidebaricon}
   - {title: Mail, icon: envelope, url: "mailto:luiscastelds@gmail.com"}
