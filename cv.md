@@ -4,4 +4,4 @@ layout: page
 permalink: /cv/
 ---
 
-[View / Download my CV (PDF)]({{ '/assets/files/luis'_current_cv.pdf' | relative_url }})
+[View / Download my CV (PDF)]({% link assets/files/luis'_current_cv.pdf %})
