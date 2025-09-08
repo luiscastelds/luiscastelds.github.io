@@ -45,7 +45,7 @@ permalink: /projects/
 - The project was so complex because Carcassonne is a terrible game to analyze with markov chains.
 - We still picked Carcassonne because we are huge fans of the game.
 - We had to break down the game so much it no longer was carcassonne.
-- Here you can check out our [results]({% link /assets/files/carcassonneProject.pdf %}).
+- Here you can check out our [results]({% link /assets/files/carcassonnePresentation.pdf %})
 
 ---
 
