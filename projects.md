@@ -14,9 +14,14 @@ permalink: /projects/
 **Stack:** Linux, CasaOS, Networking  
 **What I did:**
 - Built a personal homelab on Ubuntu Server to self-host files and media.
-- Deployed CasaOS apps (e.g., Plex, game servers, monitoring dashboards, ollama).
+- Deployed CasaOS apps ( Plex, game servers, monitoring dashboards, ollama).
 - Set up secure remote access via Tailscale (SSH), and organized basic network/service monitoring.
 
+**Comments:**
+- Scraping computer parts to build a homelab server is really fun.
+- Learned that there are a tons of amazing apps easy to setup in CasaOS.
+- I wanted to build a home media server because we have tons of movies laying around and I don't want to pay for cloud.
+- The project died very early because I need to learn how to portforward properly otherwise it felt like a major security flaw!
 ---
 
 ## Carcassonne Markov Chain Model
