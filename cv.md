@@ -4,8 +4,4 @@ layout: page
 permalink: /cv/
 ---
 
-Currently working on this one!
-Check back in a couple of days!
-
----
-
+[View / Download my CV (PDF)]({{ '/assets/files/luis'_current_cv.pdf' | relative_url }})
