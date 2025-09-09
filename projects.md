@@ -17,7 +17,7 @@ permalink: /projects/
 - This was a final project for a class (CS180).
 - I always felt that writing to a file is dull, added value and rigor to the project by implementing serializable.
 - Using serializable was fun but added a bigger challenge for my lack of experience.
-- Although serializable was a huge challenge in the beginning at the end it was a massive success because we had to avoid editing and writing files for everything.
+- Although serializable was a huge challenge in the beginning at the end it was a massive success because we avoided editing and writing text files for everything.
 - That's why you can see the weird looking for loops in the [repository](https://github.com/titerms/final-project-5) (was on my old github account, titerms).
 
 ---
@@ -51,11 +51,11 @@ permalink: /projects/
 - Analyzed the "new" game and the advantages a player may get based on turns.
 
 **Comments:**
-- Final Project for Stochastic Processes class (MA432)
+- Final Project for Stochastic Processes class (MA432).
 - Probably the most complex project I've been a part of.
 - The project was so complex because Carcassonne is a terrible game to analyze with markov chains.
-- We still picked Carcassonne because in we are huge fans of the games and we wanted to learn how to modify some real world problem to get a Markov chain to analyze.
-- We had to break down the game so much it no longer was carcassonne.
+- We still picked Carcassonne because we are huge fans of the game and we wanted to learn how to modify some real world problem to get a Markov chain to analyze.
+- We had to break down the game so much it no longer was Carcassonne.
 - Here you can check out our [results]({% link assets/files/carcassonneProject.pdf %})
 
 ---
