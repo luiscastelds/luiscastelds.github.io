@@ -47,7 +47,7 @@ permalink: /projects/
 **What I did:**
 - Broke down the game to eliminate concerns.
 - Developed a new scoring and tile placement system.
-- Simplified the state space and transition probabililty.
+- Simplified the state space and transition probabililties.
 - Analyzed the "new" game and the advantages a player may get based on turns.
 
 **Comments:**
