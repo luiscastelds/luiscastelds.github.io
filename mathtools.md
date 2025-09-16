@@ -1,5 +1,5 @@
 ---
-title: Courses
+title: Available Tools
 layout: page
 permalink: /mathtools/
 ---
