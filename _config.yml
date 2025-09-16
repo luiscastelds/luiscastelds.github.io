@@ -23,7 +23,7 @@ navigation:                     # accepts {file, title, url, icon, sidebaricon}
   - {url: "/assets/files/luisCV.pdf", title: "CV"}
   - {file: "notes.md", title: "My Notes"}
   - {file: "projects.md", title: "My Projects"}
-  - {file: "znzpluscounter.md", title: "Cool Stuff"}
+  - {file: "mathtools.md", title: "Cool Math Tools"}
 
 external:                       # accepts {file, title, url, icon, sidebaricon}
   - {title: Mail, icon: envelope, url: "mailto:luiscastelds@gmail.com"}
