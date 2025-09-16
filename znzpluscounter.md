@@ -1,7 +1,7 @@
 ---
 title: Orders in (Z/nZ,+)
 layout: page
-permalink: /orders/
+permalink: /znzpluscounter/
 ---
 
 <label for="nInput"><strong>n</strong> (size of (ℤ/nℤ, +))</label>
