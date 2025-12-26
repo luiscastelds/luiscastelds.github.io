@@ -5,13 +5,9 @@ permalink: /about/
 ---
 
 
-Born and raised in **El Salvador**, I'm a **Purdue University Alumn** with a strong passion for **mathematics, data science, and technology**. My focus is on developing something original that explore the complexities of statistics and uncover the true patterns hidden behind numbers. I thrive on solving complex problems and digging into their root causes, always seeking creative solutions.
+Born and raised in **El Salvador**, I'm a **Purdue University Alumn** with a strong passion for **mathematics, data science, and technology**. My focus is on developing something original and meaningful. I know it sounds very cliche and it probably is but what is the point of building or working on something you are not proud of or you did not commit your best efforts in. Always be proud of your contributions and do not hesitate to try new things even though they might not be the trendiest!
 
-Driven by my love for numbers and tech, I'm excited about the endless possibilities these fields offer. I strongly believe in building something meaningful and am fully committed to ensuring that creativity never gets restricted by limitations.
-
-Although I'm just beginning my career, I'm always open to new **learning opportunities, collaborations, and connections** that allow me to grow.
-
-Outside of academics, my **creativity and problem-solving** are fueled by my hobbies — **tech tinkering, grilling, and classical music**.
+Outside of academics, my **creativity and problem-solving** are fueled by my hobbies — **pc building, grilling, and classical music**.
 
 ---
 
@@ -20,7 +16,6 @@ Bachelor of Science - Mathematics - Purdue University Aug. 2021 - Dec. 2025
 
 
 Bachelor of Science - Data Science - Purdue University Aug. 2021 - Dec. 2025
-
 
 ---
 
