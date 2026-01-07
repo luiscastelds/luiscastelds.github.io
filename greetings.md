@@ -1,7 +1,7 @@
 ---
 title: Greetings
 layout: page
-permalink:
+permalink: /greetings/
 ---
 
 
