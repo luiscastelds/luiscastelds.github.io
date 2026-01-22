@@ -4,4 +4,4 @@ layout: page
 permalink: /eastereggs/
 ---
 
-- [Call of the Dead](/EE/cod/)
+- [Call of the Dead](/EE/Call of the Dead EE.md/)
