@@ -24,6 +24,7 @@ navigation:                     # accepts {file, title, url, icon, sidebaricon}
   - {file: "notes.md", title: "My Notes"}
   - {file: "projects.md", title: "My Projects"}
   - {file: "mathtools.md", title: "Cool Math Tools"}
+  - {file: "eastereggs.md", title: "BO3 Easter Eggs"}
 
 external:                       # accepts {file, title, url, icon, sidebaricon}
   - {title: Mail, icon: envelope, url: "mailto:luiscastelds@gmail.com"}
